@@ -16,7 +16,6 @@ const requestId = require('./middlewares/requestId');
 const responseHandler = require('./middlewares/responseHandler');
 const router = require('./routes');
 
-
 const app = new Koa();
 
 // Trust proxy

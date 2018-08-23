@@ -44,7 +44,8 @@
     "test:coverage:integration": "npm run test:integration -- --coverage",
     "lint": "eslint app test",
     "lint:app": "eslint app",
-    "lint:test": "eslint test"
+    "lint:test": "eslint test",
+    "db:gen": " pgen exec sequelize-template -d wll_dev -u root -t models --datafile customizations/index.js --fix"
   },
   "dependencies": {
     "@koa/cors": "2",
@@ -54,10 +55,15 @@
     "koa": "^2.5.2",
     "koa-bodyparser": "^4.2.0",
     "koa-router": "^7.4.0",
+    "pg": "^7.4.3",
+    "pg-hstore": "^2.3.2",
+    "sequelize": "^4.38.0",
+    "sequelize-cli": "^4.1.1",
     "swagger-jsdoc": "^3.0.2",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "pg-generator": "^4.7.5",
     "coveralls": "^3.0.2",
     "eslint": "^5.2.0",
     "eslint-config-kasa": "^0.1.0",
