@@ -2,7 +2,7 @@ const models = require('./../../models');
 
 exports.index = async ctx => {
   const articles = await models.Article.all({
-    attributes: ['title', 'path', 'type', 'dir', 'on_homepage'],
+    attributes: ['title', 'path', 'meta', 'directory', 'on_homepage'],
     where: {
       published: true
     }
