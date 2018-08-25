@@ -33,7 +33,7 @@
   "scripts": {
     "start": "node app",
     "dev": "NODE_ENV=development nodemon --quiet | bunyan",
-    "test": "NODE_ENV=test jest --forceExit --verbose",
+    "test": "NODE_ENV=test jest --forceExit --detectOpenHandles --verbose",
     "test:unit": "npm test -- test/unit",
     "test:integration": "npm test -- test/integration",
     "test:watch": "npm test -- --watch",
@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "@koa/cors": "2",
+    "@octokit/rest": "^15.10.0",
     "bunyan": "^1.8.12",
     "dotenv": "^6.0.0",
     "elastic-apm-node": "^1.8.3",
@@ -63,13 +64,13 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
-    "pg-generator": "^4.7.5",
     "coveralls": "^3.0.2",
     "eslint": "^5.2.0",
     "eslint-config-kasa": "^0.1.0",
     "jest": "^23.4.2",
     "jest-junit": "^5.1.0",
     "nodemon": "^1.18.3",
+    "pg-generator": "^4.7.5",
     "supertest": "^3.0.0"
   },
   "jest": {

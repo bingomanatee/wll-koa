@@ -3,3 +3,11 @@ extends:
   - 'kasa'
 parserOptions:
   sourceType: 'script'
+rules:
+  brace-style:
+    - 1
+    - 1tbs
+    - allowSingleLine: true
+  curly:
+    - 1
+    - all
