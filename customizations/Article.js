@@ -4,7 +4,6 @@ module.exports = {
   associate: ({ Article, datasource }) => {
     Article.loadFromGithub = async () => {
       const github = require('../lib/Github');
-      const uuid = require('uuid/v1');
 
       let acts = [];
       let articles = await github.getArticles();
@@ -15,12 +14,11 @@ module.exports = {
         const path = `${article.path  }/${  article.name  }.md`;
         let oldArticle = await Article.findOne({
           where: { path }
-        }, {logging: false});
+        }, { logging: false });
 
         if (!oldArticle) {
           console.log('saving ', path);
           acts.push(Article.create({
-            id: uuid(),
             content: article.content,
             title: article.meta.title,
             meta: article.meta,
