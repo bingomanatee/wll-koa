@@ -27,6 +27,7 @@ module.exports = {
         directory: {
           allowNull: false,
           type: Sequelize.CHAR(80),
+          unique: true,
         },
 
         path: {

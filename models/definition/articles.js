@@ -96,7 +96,6 @@ module.exports = (sequelize, DataTypes) => {
     }) => {
       Article.loadFromGithub = async () => {
         const github = require('../lib/Github');
-        const uuid = require('uuid/v1');
 
         let acts = [];
         let articles = await github.getArticles();
@@ -118,15 +117,16 @@ module.exports = (sequelize, DataTypes) => {
           });
 
           if (!oldArticle) {
-            console.log('saving ', path);
+            console.log('saving ', path, article.meta);
+            if (article.meta.on_homepage) console.log('... on homepage');
             acts.push(Article.create({
-              id: uuid(),
               content: article.content,
               title: article.meta.title,
               meta: article.meta,
               directory: article.path,
               path,
               sha: article.md,
+              onHomepage: article.meta.on_homepage,
               description: article.meta.intro || '',
               fileCreated: datasource.fn('Now'),
               fileRevised: datasource.fn('Now'),
@@ -140,6 +140,32 @@ module.exports = (sequelize, DataTypes) => {
         }
 
         return Promise.all(acts);
+      };
+
+      Article.compareToArticlesFromServer = async () => {
+        const _ = require('lodash');
+        let afs = require('./../lib/articles_from_server');
+
+        afs = afs.filter(ref => /\.md/.test(ref.path));
+
+        for (let serverArticle of afs) {
+          let dbArticle = await Article.findOne({
+            where: {
+              path: `/${  serverArticle.path}`
+            }
+          });
+
+          if (!dbArticle) {
+            console.log('cannot find article ', serverArticle.path, 'in db');
+          } else {
+            if (_.trim(dbArticle.title) !== serverArticle.title) {
+              console.log(`title difference: [${  _.trim(dbArticle.title)  }] > server >[${  serverArticle.title}]`);
+            }
+            if (serverArticle.on_homepage !== dbArticle.on_homepage) {
+              console.log(`on_homepage difference: ${  dbArticle.on_homepage  } > server > ${  serverArticle.on_homepage}`);
+            }
+          }
+        }
       };
     }
   });
