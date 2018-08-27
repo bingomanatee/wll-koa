@@ -12,3 +12,8 @@ module.exports = (sequelize, DataTypes) => {
   };
   return Category;
 };
+
+module.exports.initRelations = () => {
+  delete module.exports.initRelations;
+  // Destroy itself to prevent repeated calls.
+};

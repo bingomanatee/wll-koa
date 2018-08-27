@@ -46,8 +46,9 @@ module.exports = {
       afs = afs.filter(ref => /\.md/.test(ref.path));
 
       for (let serverArticle of afs) {
+        serverArticle.path = `/${  serverArticle.path}`;
         let dbArticle = await Article.findOne({ where: {
-          path: `/${  serverArticle.path}`
+          path: serverArticle.path
         } });
 
         if (!dbArticle) {

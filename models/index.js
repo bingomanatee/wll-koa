@@ -14,10 +14,12 @@ function init(sequelize) {
   // Import model files and assign them to `model` object.
   model.SequelizeMetum = sequelize.import('./definition/sequelize-meta.js');
   model.Article = sequelize.import('./definition/articles.js');
+  model.Category = sequelize.import('./definition/category.js');
 
   // All models are initialized. Now connect them with relations.
   require('./definition/sequelize-meta.js').initRelations();
   require('./definition/articles.js').initRelations();
+  require('./definition/category.js').initRelations();
   return model;
 }
 
