@@ -11,8 +11,8 @@ glob
       ignore: ['index.js'],
     }
   )
-  .map((file) => path.basename(file, '.js'))
-  .forEach((name) => {
+  .forEach((file) => {
+    const name = path.basename(file, '.js');
     // eslint-disable-next-line global-require, import/no-dynamic-require
     module.exports[name] = require(path.resolve(__dirname, file));
   });

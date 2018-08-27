@@ -3,12 +3,15 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     const { sequelize } = queryInterface;
+    await sequelize.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";');
+
     return sequelize.transaction(async (transaction) => {
       await queryInterface.createTable('articles', {
         id: {
           type: Sequelize.UUID,
           primaryKey: true,
-          defaultValue: Sequelize.UUIDV4,
+          allowNull: false,
+          defaultValue: Sequelize.UUIDV1,
         },
 
         title: {
@@ -75,17 +78,15 @@ module.exports = {
           type: Sequelize.DATE,
           defaultValue: Sequelize.fn('NOW'),
         },
-        created_at: {
+        createdAt: {
           allowNull: false,
           type: Sequelize.DATE,
-          defaultValue: Sequelize.fn('NOW'),
         },
-        updated_at: {
+        updatedAt: {
           allowNull: false,
           type: Sequelize.DATE,
-          defaultValue: Sequelize.fn('NOW'),
         },
-        deleted_at: {
+        deletedAt: {
           type: Sequelize.DATE,
           allowNull: true,
           defaultValue: null,

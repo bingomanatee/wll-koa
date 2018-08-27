@@ -11,3 +11,5 @@ rules:
   curly:
     - 1
     - all
+  prefer-template:
+    - 2

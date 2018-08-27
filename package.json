@@ -45,7 +45,7 @@
     "lint": "eslint app test",
     "lint:app": "eslint app",
     "lint:test": "eslint test",
-    "db:gen": " pgen exec sequelize-template -d wll_dev -u root -t models --datafile customizations/index.js --fix"
+    "db:gen": " pgen exec sequelize-template -d wll_dev -u root -p '' -t models --datafile customizations/index.js --fix"
   },
   "dependencies": {
     "@koa/cors": "2",
