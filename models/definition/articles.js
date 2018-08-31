@@ -12,7 +12,10 @@ module.exports = (sequelize, DataTypes) => {
     title: {
       type: DataTypes.CHAR(80),
       field: 'title',
-      allowNull: false
+      allowNull: false,
+      get() {
+        return this.getDataValue('title').trim();
+      }
     },
     version: {
       type: DataTypes.INTEGER,
@@ -118,7 +121,8 @@ module.exports = (sequelize, DataTypes) => {
 
           if (!oldArticle) {
             console.log('saving ', path, article.meta);
-            if (article.meta.on_homepage) console.log('... on homepage');
+            if (article.meta.on_homepage) { console.log('... on homepage'); }
+            if (!article.meta.published) { console.log('... hidden'); }
             acts.push(Article.create({
               content: article.content,
               title: article.meta.title,
