@@ -25,6 +25,9 @@ const app = new Koa();
 app.proxy = true;
 
 // Set middlewares
+const staticPath = path.resolve(__dirname + '/../public');
+console.log('static: ', staticPath);
+app.use(serve(staticPath));
 app.use(
   bodyParser({
     enableTypes: ['json', 'form'],
@@ -47,8 +50,6 @@ app.use(logMiddleware({ logger }));
 // Bootstrap application router
 app.use(router.routes());
 app.use(router.allowedMethods());
-
-app.use(serve(path.resolve(`${__dirname}../public`)));
 
 function onError(err, ctx) {
   if (apm.active) { apm.captureError(err); }
