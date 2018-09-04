@@ -17,7 +17,7 @@ exports.homepage = async ctx => {
     attributes: ['title', 'path', 'meta', 'published', 'directory', 'on_homepage', 'fileRevised'],
     where: {
       published: true,
-      on_homepage: true
+      onHomepage: true
     }
   });
   ctx.body = articles.map(a => a.toJSON());
