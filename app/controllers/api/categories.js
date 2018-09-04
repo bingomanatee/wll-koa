@@ -13,7 +13,7 @@ exports.index = async ctx => {
 
 exports.get = async ctx => {
   let directory = ctx.params.directory;
-  const directoryBuffer = new Buffer(directory, 'base64');
+  const directoryBuffer = Buffer.from(directory, 'base64');
   directory = directoryBuffer.toString();
 
   const category = await Category.findOne({
@@ -33,7 +33,7 @@ exports.get = async ctx => {
 
 exports.put = async ctx => {
   let directory = ctx.params.directory;
-  const directoryBuffer = new Buffer(directory, 'base64');
+  const directoryBuffer = Buffer.from(directory, 'base64');
   directory = directoryBuffer.toString();
 
   let {
@@ -57,7 +57,7 @@ exports.put = async ctx => {
 
 exports.resequence = async ctx => {
   let directory = ctx.params.directory;
-  const directoryBuffer = new Buffer(directory, 'base64');
+  const directoryBuffer = Buffer.from(directory, 'base64');
   directory = directoryBuffer.toString();
   const seq = Number.parseFloat(ctx.params.sequence);
 
