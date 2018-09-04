@@ -3,6 +3,7 @@
 'use strict';
 
 // Load APM on production environment
+const path = require('path');
 const config = require('./config');
 const apm = require('./apm');
 
@@ -15,6 +16,8 @@ const logger = require('./logger');
 const requestId = require('./middlewares/requestId');
 const responseHandler = require('./middlewares/responseHandler');
 const router = require('./routes');
+const serve = require('koa-static');
+
 
 const app = new Koa();
 
@@ -45,11 +48,11 @@ app.use(logMiddleware({ logger }));
 app.use(router.routes());
 app.use(router.allowedMethods());
 
+app.use(serve(path.resolve(`${__dirname}../public`)));
+
 function onError(err, ctx) {
-  if (apm.active)
-    apm.captureError(err);
-  if (ctx == null)
-    logger.error({ err, event: 'error' }, 'Unhandled exception occured');
+  if (apm.active) { apm.captureError(err); }
+  if (ctx == null) { logger.error({ err, event: 'error' }, 'Unhandled exception occured'); }
 }
 
 // Handle uncaught errors
