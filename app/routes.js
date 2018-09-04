@@ -10,8 +10,8 @@ router.get('/', homeController.getApiInfo);
 router.get('/spec', homeController.getSwaggerSpec);
 
 router.get('/api/articles', artCont.index);
-router.get('/homepage-articles', artCont.homepage);
-router.get('/api/articles/:id', artCont.get);
+router.get('/api/homepage-articles', artCont.homepage);
+router.get('/api/articles/:path', artCont.get);
 router.post('/api/articles', artCont.post);
 router.put('/api/articles/:id', artCont.put);
 

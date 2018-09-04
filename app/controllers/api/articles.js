@@ -4,7 +4,7 @@ const { Article } = models;
 
 exports.index = async ctx => {
   const articles = await Article.all({
-    attributes: ['title', 'path', 'meta', 'published', 'directory', 'on_homepage'],
+    attributes: ['title', 'path', 'meta', 'published', 'directory', 'on_homepage', 'fileRevised'],
     where: {
       published: true
     }
@@ -14,7 +14,7 @@ exports.index = async ctx => {
 
 exports.homepage = async ctx => {
   const articles = await Article.all({
-    attributes: ['title', 'path', 'meta', 'published', 'directory', 'on_homepage'],
+    attributes: ['title', 'path', 'meta', 'published', 'directory', 'on_homepage', 'fileRevised'],
     where: {
       published: true,
       on_homepage: true
@@ -25,10 +25,9 @@ exports.homepage = async ctx => {
 
 
 exports.get = async ctx => {
-  let path = ctx.params.path;
-  const pathBuffer = new Buffer(path, 'base64');
-  path = pathBuffer.toString();
+  let path = decodeURI(ctx.params.path).replace(/(.json)?$/, '');
 
+  console.log('path ---========= ', path);
   const article = await Article.findOne({
     where: {
       path

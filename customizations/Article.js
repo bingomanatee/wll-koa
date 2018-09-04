@@ -3,6 +3,7 @@ module.exports = {
   associate: ({ Article, datasource }) => {
     Article.loadFromGithub = async () => {
       const github = require('../lib/Github');
+      const cleanPath = require('../lib/cleanPath');
 
       let acts = [];
       let articles = await github.getArticles();
@@ -25,14 +26,14 @@ module.exports = {
             content: article.content,
             title: article.meta.title,
             meta: article.meta,
-            directory: article.path,
-            path,
+            directory: cleanPath(article.path),
+            path: cleanPath(path),
             published: !article.meta.hide,
             sha: article.md,
             onHomepage: article.meta.on_homepage,
             description: article.meta.intro || '',
             fileCreated: datasource.fn('Now'),
-            fileRevised: datasource.fn('Now'),
+            fileRevised: article.meta.revised,
             version: 1,
           }, { logging: false }));
         } else {
@@ -45,6 +46,7 @@ module.exports = {
 
     Article.compareToArticlesFromServer = async () => {
       const diff = require('diff');
+      const MD_FILENAME_RE = /\/[^/]+\.md$/;
 
       let afs = require('./../lib/articles_from_server');
 
@@ -55,8 +57,7 @@ module.exports = {
        * that are NOT in the serverArticle list.
        */
       for (let serverArticle of afs) {
-        if (!/\/[^/]+\.md$/.test(serverArticle.path)) { continue; }
-        serverArticle.path = `/${  serverArticle.path}`;
+        if (!MD_FILENAME_RE.test(serverArticle.path)) { continue; }
         let dbArticle = await Article.findOne({
           where: {
             path: serverArticle.path
@@ -68,7 +69,7 @@ module.exports = {
           serverArticle.fileCreated = new Date();
           serverArticle.fileRevised = new Date();
           serverArticle.sha = '(from server)';
-          serverArticle.directory = serverArticle.path.replace(/\/[^/]+\.md$/, '');
+          serverArticle.directory = serverArticle.path.replace(MD_FILENAME_RE, '');
           serverArticle.version = 1;
           if (!serverArticle.meta) {
             serverArticle.meta = {};

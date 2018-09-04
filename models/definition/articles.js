@@ -25,12 +25,17 @@ module.exports = (sequelize, DataTypes) => {
     directory: {
       type: DataTypes.CHAR(80),
       field: 'directory',
-      allowNull: false
-    },
+      allowNull: false,
+      get() {
+        return this.getDataValue('directory').trim();
+      }  },
     path: {
       type: DataTypes.CHAR(160),
       field: 'path',
-      allowNull: false
+      allowNull: false,
+      get() {
+        return this.getDataValue('path').trim();
+      }
     },
     sha: {
       type: DataTypes.CHAR(160),
