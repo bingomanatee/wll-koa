@@ -27,7 +27,9 @@ module.exports = (sequelize, DataTypes) => {
       field: 'directory',
       allowNull: false,
       get() {
-        return this.getDataValue('directory').trim();
+        const dir = this.getDataValue('directory');
+        if (!(dir && (typeof dir === 'string'))) return '';
+        return dir.trim();
       }  },
     path: {
       type: DataTypes.CHAR(160),

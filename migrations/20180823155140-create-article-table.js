@@ -27,12 +27,12 @@ module.exports = {
         directory: {
           allowNull: false,
           type: Sequelize.CHAR(80),
-          unique: true,
         },
 
         path: {
           allowNull: false,
           type: Sequelize.CHAR(160),
+          unique: true,
         },
 
         sha: {

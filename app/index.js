@@ -26,7 +26,6 @@ app.proxy = true;
 
 // Set middlewares
 const staticPath = path.resolve(__dirname + '/../public');
-console.log('static: ', staticPath);
 app.use(serve(staticPath));
 app.use(
   bodyParser({

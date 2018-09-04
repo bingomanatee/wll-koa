@@ -21,21 +21,26 @@ module.exports = {
         }, { logging: false });
 
         if (!oldArticle) {
-          console.log('saving ', path, article.meta.on_homepage ? '... on homepage' : '');
-          acts.push(Article.create({
-            content: article.content,
-            title: article.meta.title,
-            meta: article.meta,
-            directory: cleanPath(article.path),
-            path: cleanPath(path),
-            published: !article.meta.hide,
-            sha: article.md,
-            onHomepage: article.meta.on_homepage,
-            description: article.meta.intro || '',
-            fileCreated: datasource.fn('Now'),
-            fileRevised: article.meta.revised,
-            version: 1,
-          }, { logging: false }));
+          ((article, path) => {
+            console.log('saving ', path, article.meta.on_homepage ? '... on homepage' : '');
+            acts.push(() => Article.create({
+              content: article.content,
+              title: article.meta.title,
+              meta: article.meta,
+              directory: cleanPath(article.path),
+              path: cleanPath(path),
+              published: !article.meta.hide,
+              sha: article.md,
+              onHomepage: article.meta.on_homepage,
+              description: article.meta.intro || '',
+              fileCreated: datasource.fn('Now'),
+              fileRevised: article.meta.revised,
+              version: 1,
+            }, { logging: false })
+              .then(() => console.log('saved ', path))
+              .catch(err => console.log('error saving ', path, err.message))
+            );
+          })(article, path);
         } else {
           console.warn('not overriding existing article: ', path);
         }
@@ -77,7 +82,14 @@ module.exports = {
           if (!serverArticle.description) {
             serverArticle.description = '';
           }
-          await Article.create(serverArticle);
+          (async (serverArticle) => {
+            try {
+              await Article.create(serverArticle);
+            } catch (err) {
+              console.log('error saving ', serverArticle.path);
+              console.log(err);
+            }
+          })(serverArticle);
         } else {
           let changed = false;
           if (dbArticle.title !== serverArticle.title) {
