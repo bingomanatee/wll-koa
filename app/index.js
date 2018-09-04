@@ -11,7 +11,7 @@ const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const cors = require('@koa/cors');
 const errorHandler = require('./middlewares/errorHandler');
-const logMiddleware = require('./middlewares/log');
+// const logMiddleware = require('./middlewares/log');
 const logger = require('./logger');
 const requestId = require('./middlewares/requestId');
 const responseHandler = require('./middlewares/responseHandler');
@@ -25,7 +25,7 @@ const app = new Koa();
 app.proxy = true;
 
 // Set middlewares
-const staticPath = path.resolve(__dirname + '/../public');
+const staticPath = path.resolve(`${__dirname  }/../public`);
 app.use(serve(staticPath));
 app.use(
   bodyParser({
@@ -44,7 +44,7 @@ app.use(
 );
 app.use(responseHandler());
 app.use(errorHandler());
-app.use(logMiddleware({ logger }));
+// app.use(logMiddleware({ logger }));
 
 // Bootstrap application router
 app.use(router.routes());
@@ -52,7 +52,7 @@ app.use(router.allowedMethods());
 
 function onError(err, ctx) {
   if (apm.active) { apm.captureError(err); }
-  if (ctx == null) { logger.error({ err, event: 'error' }, 'Unhandled exception occured'); }
+  if (ctx == null) { console.log(`Unhandled exception: ${  err.messag}`); }
 }
 
 // Handle uncaught errors
@@ -61,7 +61,7 @@ app.on('error', onError);
 // Start server
 if (!module.parent) {
   const server = app.listen(config.port, config.host, () => {
-    logger.info({ event: 'execute' }, `API server listening on ${config.host}:${config.port}, in ${config.env}`);
+    console.log(`API server listening on ${config.host}:${config.port}, in ${config.env}`);
   });
   server.on('error', onError);
 }
