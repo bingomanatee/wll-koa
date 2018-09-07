@@ -23,7 +23,7 @@ module.exports = {
         if (!oldArticle) {
           ((article, path) => {
             console.log('saving ', path, article.meta.on_homepage ? '... on homepage' : '');
-            acts.push(() => Article.create({
+            acts.push((() => Article.create({
               content: article.content,
               title: article.meta.title,
               meta: article.meta,
@@ -39,7 +39,7 @@ module.exports = {
             }, { logging: false })
               .then(() => console.log('saved ', path))
               .catch(err => console.log('error saving ', path, err.message))
-            );
+            )());
           })(article, path);
         } else {
           console.warn('not overriding existing article: ', path);

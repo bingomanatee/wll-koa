@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-
 'use strict';
 
+let http = require('http');
 // Load APM on production environment
 const path = require('path');
 const config = require('./config');
@@ -51,8 +51,12 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 function onError(err, ctx) {
-  if (apm.active) { apm.captureError(err); }
-  if (ctx == null) { console.log(`Unhandled exception: ${  err.messag}`); }
+  if (apm.active) {
+    apm.captureError(err);
+  }
+  if (ctx == null) {
+    console.log(`Unhandled exception: ${  err.messag}`);
+  }
 }
 
 // Handle uncaught errors
@@ -62,6 +66,12 @@ app.on('error', onError);
 if (!module.parent) {
   const server = app.listen(config.port, config.host, () => {
     console.log(`API server listening on ${config.host}:${config.port}, in ${config.env}`);
+
+    if (process.env.NODE_ENV === 'production') {
+      setInterval(function () {
+        http.get('http://wonderland-labs.herokuapp.com/api/articles');
+      }, 100000);
+    }
   });
   server.on('error', onError);
 }
