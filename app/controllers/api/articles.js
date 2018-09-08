@@ -1,5 +1,6 @@
 const models = require('./../../models');
-
+const bottle = require('./../../../lib');
+const { validateCtxAuth } = bottle.container;
 const { Article } = models;
 
 exports.index = async ctx => {
@@ -26,8 +27,6 @@ exports.homepage = async ctx => {
 
 exports.get = async ctx => {
   let path = decodeURI(ctx.params.path).replace(/(.json)?$/, '');
-
-  console.log('path ---========= ', path);
   const article = await Article.findOne({
     where: {
       path
@@ -37,8 +36,13 @@ exports.get = async ctx => {
   ctx.body = article.toJSON();
 };
 
+/**
+ * new article
+ * @param ctx
+ * @returns {Promise<void>}
+ */
 exports.post = async ctx => {
-  // @TODO: add auth from auth0
+  await validateCtxAuth(ctx);
 
   const {
     content,
@@ -48,7 +52,7 @@ exports.post = async ctx => {
     on_homepage,
   } = ctx.body;
 
-  const existing = await Article.find_by({ path });
+  const existing = await Article.findOne({ path }).count();
   if (existing) {
     throw new Error(`article with path ${  path  } exists`);
   }
@@ -68,7 +72,13 @@ exports.post = async ctx => {
   ctx.body = newArticle.toJSON();
 };
 
+/**
+ * update article
+ * @param ctx
+ * @returns {Promise<void>}
+ */
 exports.put = async ctx => {
+  await validateCtxAuth(ctx);
   const {
     content,
     path,
@@ -77,13 +87,13 @@ exports.put = async ctx => {
     on_homepage,
   } = ctx.body;
 
-  const existing = await Article.find_by({ path });
+  const existing = await Article.findOne({ path });
   if (!existing) {
     throw new Error(`article with path ${  path  } does not exist`);
   }
 
   Object.assign(existing, {
-    content, title, published, on_homepage
+    content, title, published, on_homepage, fileRevised: new Date(),
   });
   await existing.save();
 

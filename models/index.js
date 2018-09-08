@@ -15,11 +15,19 @@ function init(sequelize) {
   model.SequelizeMetum = sequelize.import('./definition/sequelize-meta.js');
   model.Article = sequelize.import('./definition/articles.js');
   model.Category = sequelize.import('./definition/category.js');
+  model.UserMeta = sequelize.import('./definition/user-meta.js');
 
   // All models are initialized. Now connect them with relations.
-  require('./definition/sequelize-meta.js').initRelations();
-  require('./definition/articles.js').initRelations();
-  require('./definition/category.js').initRelations();
+  let meta = require('./definition/sequelize-meta.js');
+  let articles = require('./definition/articles.js');
+  let category = require('./definition/category.js');
+  let userMeta = require('./definition/user-meta.js');
+  [meta, articles, category, userMeta].forEach(model => {
+    if (model && model.initRelations) {
+      model.initRelations();
+    }
+  });
+
   return model;
 }
 
