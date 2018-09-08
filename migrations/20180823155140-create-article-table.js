@@ -16,7 +16,7 @@ module.exports = {
 
         title: {
           allowNull: false,
-          type: Sequelize.CHAR(80)
+          type: Sequelize.STRING
         },
 
         version: {
@@ -26,18 +26,18 @@ module.exports = {
 
         directory: {
           allowNull: false,
-          type: Sequelize.CHAR(80),
+          type: Sequelize.STRING,
         },
 
         path: {
           allowNull: false,
-          type: Sequelize.CHAR(160),
+          type: Sequelize.STRING,
           unique: true,
         },
 
         sha: {
           allowNull: false,
-          type: Sequelize.CHAR(160),
+          type: Sequelize.STRING,
         },
 
         meta: {

@@ -1,52 +1,21 @@
 module.exports = {
   timestamps: true,
   associate: ({ Article, datasource }) => {
-    Article.loadFromGithub = async () => {
-      const github = require('../lib/Github');
-      const cleanPath = require('../lib/cleanPath');
+    Article.loadFromGithub = require('./article_methods/loadFromGithub')(Article, datasource);
 
-      let acts = [];
-      let articles = await github.getArticles();
+    Article.commitChangesToGithub = require('./article_methods/commitChangesToGithub')(Article, datasource);
 
-      for (let article of articles) {
-        if (!(article && article.meta)) {
-          continue;
-        }
-        if (article.dir === '.backups') {
-          continue;
-        }
-        const path = `${article.path  }/${  article.name  }.md`;
-        let oldArticle = await Article.findOne({
-          where: { path }
-        }, { logging: false });
+    Article.cleanup = async () => {
+      let articles = await Article.findAll();
 
-        if (!oldArticle) {
-          ((article, path) => {
-            console.log('saving ', path, article.meta.on_homepage ? '... on homepage' : '');
-            acts.push((() => Article.create({
-              content: article.content,
-              title: article.meta.title,
-              meta: article.meta,
-              directory: cleanPath(article.path),
-              path: cleanPath(path),
-              published: !article.meta.hide,
-              sha: article.md,
-              onHomepage: article.meta.on_homepage,
-              description: article.meta.intro || '',
-              fileCreated: datasource.fn('Now'),
-              fileRevised: article.meta.revised,
-              version: 1,
-            }, { logging: false })
-              .then(() => console.log('saved ', path))
-              .catch(err => console.log('error saving ', path, err.message))
-            )());
-          })(article, path);
-        } else {
-          console.warn('not overriding existing article: ', path);
+      for (let a of articles) {
+        if (a.title = 'New Article') {
+          if (a.meta && a.meta.title) {
+            a.title = a.meta.title;
+            await  a.save();
+          }
         }
       }
-
-      return Promise.all(acts);
     };
 
     Article.compareToArticlesFromServer = async () => {

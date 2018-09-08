@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true
     },
     title: {
-      type: DataTypes.CHAR(80),
+      type: DataTypes.STRING,
       field: 'title',
       allowNull: false,
       get() {
@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     directory: {
-      type: DataTypes.CHAR(80),
+      type: DataTypes.STRING,
       field: 'directory',
       allowNull: false,
       get() {
@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
         return dir.trim();
       }  },
     path: {
-      type: DataTypes.CHAR(160),
+      type: DataTypes.STRING,
       field: 'path',
       allowNull: false,
       get() {
@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     sha: {
-      type: DataTypes.CHAR(160),
+      type: DataTypes.STRING,
       field: 'sha',
       allowNull: false
     },
