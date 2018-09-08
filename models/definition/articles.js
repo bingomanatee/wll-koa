@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       get() {
         const dir = this.getDataValue('directory');
-        if (!(dir && (typeof dir === 'string'))) return '';
+        if (!(dir && (typeof dir === 'string'))) { return ''; }
         return dir.trim();
       }  },
     path: {
@@ -36,7 +36,9 @@ module.exports = (sequelize, DataTypes) => {
       field: 'path',
       allowNull: false,
       get() {
-        return this.getDataValue('path').trim();
+        const path = this.getDataValue('path');
+        if (!(path && typeof path === 'string')) { return ''; }
+        return path.trim();
       }
     },
     sha: {

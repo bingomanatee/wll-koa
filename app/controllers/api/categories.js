@@ -1,7 +1,7 @@
 const _ = require('lodash');
 
 const models = require('./../../models');
-const { Category, Articles } = models;
+const { Category, Article } = models;
 
 exports.index = async ctx => {
   const categories = await Category.all({
@@ -12,23 +12,30 @@ exports.index = async ctx => {
 
 
 exports.get = async ctx => {
-  let directory = ctx.params.directory;
-  const directoryBuffer = Buffer.from(directory, 'base64');
-  directory = directoryBuffer.toString();
-
-  const category = await Category.findOne({
+  const directory = decodeURI(ctx.params.directory).replace(/\.json$/, '');
+  console.log('getting dir ', directory);
+  let category = await Category.findOne({
     where: {
       directory
     }
   });
 
-  const articles = await Articles.find({
-    where: { directory }
+  category = category.toJSON();
+  ctx.assert(category);
+
+  const articles = await Article.findAll({
+    where: { directory },
+    attributes: ['path', 'id', 'directory', 'title', 'on_homepage', 'published', 'fileRevised']
   });
 
-  category.articles = articles.map(a => a.toJSON());
+  try {
+    category.articles = articles.map(a => a.toJSON());
+  } catch (err) {
+    console.log('error: ', err);
+  }
 
-  ctx.body = category.toJSON();
+  console.log('body:', category);
+  ctx.body = category;
 };
 
 exports.put = async ctx => {

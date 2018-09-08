@@ -50,9 +50,9 @@ exports.post = async ctx => {
     title,
     published,
     on_homepage,
-  } = ctx.body;
+  } = ctx.request.body;
 
-  const existing = await Article.findOne({ path }).count();
+  const existing = await Article.findOne({ where: { path } }).count();
   if (existing) {
     throw new Error(`article with path ${  path  } exists`);
   }
@@ -78,16 +78,23 @@ exports.post = async ctx => {
  * @returns {Promise<void>}
  */
 exports.put = async ctx => {
-  await validateCtxAuth(ctx);
+  console.log('putting article:', ctx.header);
+  try {
+    const isValid = await validateCtxAuth(ctx);
+    console.log('valid', isValid);
+  } catch (err) {
+    console.log('error: ', err);
+  }
   const {
     content,
     path,
     title,
     published,
     on_homepage,
-  } = ctx.body;
+  } = ctx.request.body;
+  console.log(path, 'content: ', content);
 
-  const existing = await Article.findOne({ path });
+  const existing = await Article.findOne({ where: { path } });
   if (!existing) {
     throw new Error(`article with path ${  path  } does not exist`);
   }
