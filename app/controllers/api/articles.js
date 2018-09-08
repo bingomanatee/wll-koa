@@ -49,7 +49,7 @@ exports.post = async ctx => {
     path,
     title,
     published,
-    on_homepage,
+    onHomepage,
   } = ctx.request.body;
 
   const existing = await Article.findOne({ where: { path } }).count();
@@ -62,7 +62,7 @@ exports.post = async ctx => {
     path,
     title,
     published,
-    on_homepage,
+    onHomepage,
     version: 1,
     fileCreated: new Date(),
     fileRevised: new Date(),
@@ -90,7 +90,7 @@ exports.put = async ctx => {
     path,
     title,
     published,
-    on_homepage,
+    onHomepage,
   } = ctx.request.body;
   console.log(path, 'content: ', content);
 
@@ -100,7 +100,7 @@ exports.put = async ctx => {
   }
 
   Object.assign(existing, {
-    content, title, published, on_homepage, fileRevised: new Date(),
+    content, title, published, onHomepage, fileRevised: new Date(),
   });
   await existing.save();
 
