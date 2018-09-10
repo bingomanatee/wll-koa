@@ -49,18 +49,39 @@ module.exports = (Article, datasource) => {
         let githubArticle = githubArticlesByPath.get((dbArticle.path));
 
         if (different(dbArticle.title, githubArticle.meta.title)) {
+          console.log(dbArticle.path, 'different title:', dbArticle.title, githubArticle.meta.title);
           changedArticles.push(dbArticle);
           continue;
         }
 
         if (different(dbArticle.content, githubArticle.content)) {
-          console.log('different content:', diff.diffLines(dbArticle.content, githubArticle.content));
+          console.log(dbArticle.path, 'different content:', diff.diffLines(dbArticle.content, githubArticle.content));
+          changedArticles.push(dbArticle);
+          continue;
+        }
+
+        if (different(Boolean(dbArticle.onHomepage), Boolean(githubArticle.meta.on_homepage))) {
+          console.log(dbArticle.path, 'different on_homepage:', Boolean(dbArticle.onHomepage),  Boolean(githubArticle.meta.on_homepage));
+          changedArticles.push(dbArticle);
+          continue;
+        }
+
+        if (different(Boolean(dbArticle.published), Boolean(!githubArticle.meta.hide))) {
+          console.log(dbArticle.path, 'different published:', Boolean(dbArticle.published), Boolean(!githubArticle.meta.hide));
           changedArticles.push(dbArticle);
           continue;
         }
       }
     }
 
-    //@TODO: write back go a commit
+    let files = await Promise.all(changedArticles.map(a => a.toBlob()));
+    files = _(files)
+      .compact()
+      .flatten()
+      .value();
+
+    return github.newCommit(files);
+
+    // @TODO: write back go a commit
   };
 };

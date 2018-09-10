@@ -18,6 +18,8 @@ module.exports = {
       }
     };
 
+    Article.prototype.toBlob = require('./article_methods/toBlob')(Article, datasource);
+
     Article.compareToArticlesFromServer = async () => {
       const diff = require('diff');
       const MD_FILENAME_RE = /\/[^/]+\.md$/;
