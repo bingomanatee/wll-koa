@@ -23,7 +23,6 @@ exports.getAuth = async (ctx) => {
       ctx.body = {
         isAdmin: false,
         error: 'userAuth is invalid',
-        token: TOKEN,
         userAuth: userAuth,
       };
     }
