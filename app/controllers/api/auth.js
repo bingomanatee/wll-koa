@@ -11,7 +11,7 @@ exports.getAuth = async (ctx) => {
 
     let userAuth = await validateCtxAuth(ctx);
 
-    if (userAuth) {
+    if (userAuth && userAuth.found) {
       const dbUser = await userModel.findOne({ where: { sub: ctx.header.sub } });
       if (dbUser) {
         ctx.body = dbUser.toJSON();
@@ -19,10 +19,9 @@ exports.getAuth = async (ctx) => {
         ctx.body = { isAdmin: false };
       }
     } else {
-      ctx.body = { isAdmin: false, error: 'cannot find sub ' + ctx.header.sub };
+      ctx.body = { isAdmin: false, error: 'userAuth is invalid', userAuth: userAuth };
     }
   } catch (err) {
-    console.log('error: ', err.message);
-    this.body = { isAdmin: false, error: err.message };
+    this.body = { isAdmin: false, error: err };
   }
 };
