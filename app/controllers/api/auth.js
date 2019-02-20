@@ -19,10 +19,10 @@ exports.getAuth = async (ctx) => {
         ctx.body = { isAdmin: false };
       }
     } else {
-      ctx.body = { isAdmin: false };
+      ctx.body = { isAdmin: false, error: 'cannot find sub ' + ctx.header.sub };
     }
   } catch (err) {
     console.log('error: ', err.message);
-    this.body = { isAdmin: false };
+    this.body = { isAdmin: false, error: err.message };
   }
 };
