@@ -16,6 +16,7 @@ exports.getAuth = async (ctx) => {
       const dbUser = await userModel.findOne({ where: { sub: ctx.header.sub } });
       if (dbUser) {
         ctx.body = dbUser.toJSON();
+        ctx.body.isAdmin = dbUser.is_admin;
       } else {
         ctx.body = { isAdmin: false };
       }
