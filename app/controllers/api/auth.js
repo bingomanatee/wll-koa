@@ -2,6 +2,7 @@ const models = require('./../../models');
 const bottle = require('./../../../lib');
 const { validateCtxAuth } = bottle.container;
 const { UserMeta, UserMetum } = models;
+const TOKEN =  process.env.AUTH0_API_TOKEN;
 
 const userModel = UserMeta || UserMetum;
 
@@ -19,7 +20,12 @@ exports.getAuth = async (ctx) => {
         ctx.body = { isAdmin: false };
       }
     } else {
-      ctx.body = { isAdmin: false, error: 'userAuth is invalid', userAuth: userAuth };
+      ctx.body = {
+        isAdmin: false,
+        error: 'userAuth is invalid',
+        token: TOKEN,
+        userAuth: userAuth,
+      };
     }
   } catch (err) {
     this.body = { isAdmin: false, error: err };
