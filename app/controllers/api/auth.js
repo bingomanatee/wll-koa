@@ -1,7 +1,9 @@
 const models = require('./../../models');
 const bottle = require('./../../../lib');
 const { validateCtxAuth } = bottle.container;
-const { UserMeta } = models;
+const { UserMeta, UserMetum } = models;
+
+const userModel = UserMeta || UserMetum;
 
 exports.getAuth = async (ctx) => {
   try {
@@ -10,7 +12,7 @@ exports.getAuth = async (ctx) => {
     let userAuth = await validateCtxAuth(ctx);
 
     if (userAuth) {
-      const dbUser = await UserMeta.findOne({ where: { sub: ctx.header.sub } });
+      const dbUser = await userModel.findOne({ where: { sub: ctx.header.sub } });
       if (dbUser) {
         ctx.body = dbUser.toJSON();
       } else {
