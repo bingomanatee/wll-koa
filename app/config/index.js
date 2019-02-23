@@ -2,11 +2,13 @@
 
 const dotenv = require('dotenv');
 
-
+const env = process.env.NODE_ENV || 'development';
 // Load environment variables from .env file
 dotenv.config();
+if (env !== 'production') {
+  dotenv.config({ path: `.env.${ env}` });
+}
 
-const env = process.env.NODE_ENV || 'development';
 const configs = {
   base: {
     env,

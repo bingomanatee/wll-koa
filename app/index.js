@@ -18,7 +18,6 @@ const responseHandler = require('./middlewares/responseHandler');
 const router = require('./routes');
 const serve = require('koa-static');
 
-
 const app = new Koa();
 
 // Trust proxy

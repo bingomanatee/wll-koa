@@ -17,8 +17,8 @@ router.post('/api/articles', artCont.post);
 router.put('/api/articles/:id', artCont.put);
 
 router.get('/api/categories', catCont.index);
-router.get('/api/categories/:directory', catCont.get);
-router.put('/api/categories/:directory', catCont.put);
+router.get('/api/categories/:directory*', catCont.get);
+router.put('/api/categories/:directory*', catCont.put);
 
 router.post('/api/auth', authCont.getAuth);
 router.options('/api/auth', (ctx)=> ctx.body = 'foo');

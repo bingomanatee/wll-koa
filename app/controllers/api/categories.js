@@ -4,6 +4,7 @@ const models = require('./../../models');
 const { Category, Article } = models;
 
 exports.index = async ctx => {
+  console.log('getting index of categories');
   const categories = await Category.all({
     order: ['sequence']
   });
@@ -20,12 +21,19 @@ exports.get = async ctx => {
     }
   });
 
+  if (!category) {
+    console.log('category not found for ', directory);
+    ctx.status = 404;
+    ctx.message = `cannot find directory ${  directory}`;
+    return;
+  }
+
   category = category.toJSON();
   ctx.assert(category);
 
   const articles = await Article.findAll({
     where: { directory },
-    attributes: ['path', 'id', 'directory', 'title', 'on_homepage', 'published', 'fileRevised']
+    attributes: ['path', 'id', 'directory', 'description', 'title', 'on_homepage', 'published', 'fileRevised']
   });
 
   try {
@@ -76,7 +84,9 @@ exports.resequence = async ctx => {
   // update the sequence value of the category.
   // note as a float value sequence may not be a saveable value
   for (let cat of categories) {
-    if (cat.directory === directory) { cat.sequence = seq; }
+    if (cat.directory === directory) {
+      cat.sequence = seq;
+    }
   }
 
   // resort the categories based on the updated sequence

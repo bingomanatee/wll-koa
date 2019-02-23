@@ -2,13 +2,12 @@ const models = require('./../../models');
 const bottle = require('./../../../lib');
 const { validateCtxAuth } = bottle.container;
 const { UserMeta, UserMetum } = models;
-const TOKEN =  process.env.AUTH0_API_TOKEN;
 
 const userModel = UserMeta || UserMetum;
 
 exports.getAuth = async (ctx) => {
   try {
-    console.log('headers: ', ctx.header);
+    console.log('getAuth:headers: ', ctx.header.sub, ctx.header.access_token);
 
     let userAuth = await validateCtxAuth(ctx);
 
@@ -29,6 +28,7 @@ exports.getAuth = async (ctx) => {
       };
     }
   } catch (err) {
+    console.log('getAuth:error --- ', err);
     this.body = { isAdmin: false, error: err };
   }
 };
