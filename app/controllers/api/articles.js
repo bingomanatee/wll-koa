@@ -1,7 +1,7 @@
 const models = require('./../../models');
 const bottle = require('./../../../lib');
-const {validateCtxAuth} = bottle.container;
-const {Article} = models;
+const { validateCtxAuth } = bottle.container;
+const { Article } = models;
 
 exports.index = async ctx => {
   let isAdmin = false;
@@ -40,7 +40,7 @@ exports.homepage = async ctx => {
     crit.published = true;
   }
   const articles = await Article.all({
-    attributes: ['title', 'path', 'meta', 'published', 'directory', 'on_homepage', 'fileRevised'],
+    attributes: ['title', 'path', 'meta', 'published', 'directory', 'description', 'on_homepage', 'fileRevised'],
     where: crit
   });
   ctx.body = articles.map(a => a.toJSON());
@@ -74,7 +74,7 @@ exports.post = async ctx => {
     onHomepage,
   } = ctx.request.body;
 
-  const existing = await Article.findOne({where: {path}}).count();
+  const existing = await Article.findOne({ where: { path } }).count();
   if (existing) {
     throw new Error(`article with path ${  path  } exists`);
   }
@@ -116,7 +116,7 @@ exports.put = async ctx => {
   } = ctx.request.body;
   console.log(path, 'content: ', content);
 
-  const existing = await Article.findOne({where: {path}});
+  const existing = await Article.findOne({ where: { path } });
   if (!existing) {
     throw new Error(`article with path ${  path  } does not exist`);
   }
