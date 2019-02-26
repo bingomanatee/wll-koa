@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
     sha: {
       type: DataTypes.STRING,
       field: 'sha',
-      allowNull: false
+      allowNull: true
     },
     meta: {
       type: DataTypes.JSON,

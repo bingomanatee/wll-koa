@@ -64,7 +64,13 @@ exports.get = async ctx => {
  * @returns {Promise<void>}
  */
 exports.post = async ctx => {
-  await validateCtxAuth(ctx);
+  console.log('-------------- NEW ARTICLE');
+  try {
+    await validateCtxAuth(ctx);
+  } catch (err) {
+    console.log('new article cannot save - no auth', err);
+    throw err;
+  }
 
   const {
     content,
@@ -72,26 +78,38 @@ exports.post = async ctx => {
     title,
     published,
     onHomepage,
+    description,
+    filename,
+    directory,
   } = ctx.request.body;
 
-  const existing = await Article.findOne({ where: { path } }).count();
-  if (existing) {
-    throw new Error(`article with path ${  path  } exists`);
+
+  try {
+    const existing = await Article.findOne({ where: { path } });
+    if (existing) {
+      throw new Error(`article with path ${  path  } exists`);
+    }
+    const newArticle = await Article.create({
+      content,
+      path,
+      title,
+      published,
+      onHomepage,
+      filename,
+      description,
+      directory,
+      version: 1,
+      fileCreated: new Date(),
+      fileRevised: new Date(),
+      meta: {}
+    });
+    ctx.body = newArticle.toJSON();
+    console.log('-------- saved', newArticle.toJSON());
+  } catch (err) {
+    console.log('-------- error saving;', err);
+    throw err;
   }
 
-  const newArticle = await Article.create({
-    content,
-    path,
-    title,
-    published,
-    onHomepage,
-    version: 1,
-    fileCreated: new Date(),
-    fileRevised: new Date(),
-    meta: {}
-  });
-
-  ctx.body = newArticle.toJSON();
 };
 
 /**
