@@ -47,19 +47,21 @@ exports.get = async ctx => {
 };
 
 exports.put = async ctx => {
-  let directory = ctx.params.directory;
-  const directoryBuffer = Buffer.from(directory, 'base64');
-  directory = directoryBuffer.toString();
+  let directory = decodeURIComponent(ctx.params.directory);
+  directory = directory.replace(/\.[\w]+$/, '');
+  console.log('putting directory: ', directory, 'for', ctx.request.body);
 
   let {
-    title, content, published
-  } = ctx.body;
+    title, content, published, sequence
+  } = ctx.request.body;
 
   const category = await Category.findOne({
     where: {
       directory
     }
   });
+
+  console.log('found old category', category);
 
   Object.assign(category, {
     title, content, published

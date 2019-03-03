@@ -46,9 +46,9 @@ exports.homepage = async ctx => {
   ctx.body = articles.map(a => a.toJSON());
 };
 
-
 exports.get = async ctx => {
-  let path = decodeURI(ctx.params.path).replace(/(.json)?$/, '');
+  let path = decodeURIComponent(ctx.params.path).replace(/\.[\w.]+$/, '') + '.md';
+  console.log('getting path:', path);
   const article = await Article.findOne({
     where: {
       path
